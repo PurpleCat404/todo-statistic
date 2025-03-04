@@ -40,10 +40,14 @@ function processCommand(command) {
             }
             break;
         case command.startsWith('user'):
-            let userName = command.split(' ')[1];
+            const userName = command.split(' ')[1].toLowerCase();
             for (const task of tasks) {
-                if (task.toLowerCase().includes(userName.toLowerCase()))
-                    console.log(task);
+                if (task.includes(';')) {
+                    const user = task.split(';')[0].slice(8).toLowerCase();
+                    if (user === userName) {
+                        console.log(task);
+                    }
+                }
             }
             break;
         case command.startsWith('sort'):
