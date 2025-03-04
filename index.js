@@ -50,35 +50,50 @@ function processCommand(command) {
                 }
             }
             break;
-        case command.startsWith('sort'):
-            arg = command.split(' ')[1];
-            if (arg === 'importance') {
-                let sortedTasks = [...tasks];
-                const countExclamations = (str) => str.split("!").length - 1;
-                sortedTasks.sort((a, b) => countExclamations(b) - countExclamations(a));
-                for (task of sortedTasks) {
-                    console.log(task);
+            case command.startsWith('sort'):
+                arg = command.split(' ')[1];
+                if (arg === 'importance') {
+                    let sortedTasks = [...tasks];
+                    const countExclamations = (str) => str.split("!").length - 1;
+                    sortedTasks.sort((a, b) => countExclamations(b) - countExclamations(a));
+                    for (task of sortedTasks) {
+                        console.log(task);
+                    }
                 }
-            }
-            if (arg === 'user') {
-                let sortedTasks = {};
-                for (const task of tasks) {
-                    if (task.includes(';')) {
-                        let user = task.split(';')[0].slice(8).toLowerCase();
-                        let comment = task.split(';')[2];
-                        if (user in sortedTasks)
-                            sortedTasks[user].push(comment);
-                        else {
-                            sortedTasks[user] = [comment];
+                if (arg === 'user') {
+                    const todoOffset = 8;
+                    let sortedTasks = {};
+                    for (const task of tasks) {
+                        if (task.includes(';')) {
+                            let user = task.split(';')[0].slice(todoOffset).toLowerCase();
+                            let comment = task.split(';')[2];
+                            if (user in sortedTasks)
+                                sortedTasks[user].push(comment);
+                            else {
+                                sortedTasks[user] = [comment];
+                            }
+                        }
+                        else{
+                            let comment = task.slice(todoOffset);
+                            if (-1 in sortedTasks)
+                                sortedTasks[-1].push(comment);
+                            else {
+                                sortedTasks[-1] = [comment];
+                            }
+                        }
+    
+                    }
+                    for (const user of Object.keys(sortedTasks)){
+                        for (const comment of sortedTasks[user]){
+                            if (user == -1){
+                                console.log(`${comment}`);
+                            }
+                            else{
+                                console.log(`${user}: ${comment}`);
+                            }
                         }
                     }
                 }
-                for (const user of Object.keys(sortedTasks)){
-                    for (const comment of sortedTasks[user])
-                        console.log(`${user}: ${comment}`);
-                }
-            }
-
             break;
         default:
             console.log('wrong command');
