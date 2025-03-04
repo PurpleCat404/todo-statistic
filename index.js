@@ -93,8 +93,27 @@ function processCommand(command) {
                             }
                         }
                     }
+                }else if (arg == "date") {
+                    const taskWithDate = []
+                    const otherTasks = []
+                    for (const task of tasks) {
+                        if (task.includes(';')) {
+                            let splitedTask = task.split(';')
+                            const date = splitedTask[1].trim();
+                            taskWithDate.push({date: new Date(date), task: task});
+                        }else{
+                            otherTasks.push(task);
+                        }
+                    }
+                    taskWithDate.sort((a, b) => b.date - a.date);
+                    for (taskDate of taskWithDate){
+                        console.log(taskDate.task)
+                    }
+                    for (task of otherTasks){
+                        console.log(task)
+                    }
                 }
-            break;
+                break;
         default:
             console.log('wrong command');
             break;
