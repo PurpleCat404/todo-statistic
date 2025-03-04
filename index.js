@@ -23,6 +23,18 @@ function getAllTasks() {
     return tasks;
 }
 
+function parseDate(dateString) {
+    let parts = dateString.split('-').map(Number); // Разбиваем дату и приводим к числам
+    if (parts.length === 1) {
+        return new Date(parts[0], 0, 1); // YYYY → 1 января указанного года
+    } else if (parts.length === 2) {
+        return new Date(parts[0], parts[1] - 1, 1); // YYYY-MM → 1 число указанного месяца
+    } else if (parts.length === 3) {
+        return new Date(parts[0], parts[1] - 1, parts[2]); // YYYY-MM-DD → конкретная дата
+    }
+    return null;
+}
+
 function processCommand(command) {
     let tasks = getAllTasks();
     switch (true) {
@@ -114,6 +126,25 @@ function processCommand(command) {
                     }
                 }
                 break;
+        case command.startsWith('date'):
+            const taskWithDate = []
+            const otherTasks = []
+            for (const task of tasks) {
+                if (task.includes(';')) {
+                    let splitedTask = task.split(';')
+                    const date = splitedTask[1].trim();
+                    taskWithDate.push({date: new Date(date), task: task});
+                }else{
+                    otherTasks.push(task);
+                }
+            }
+            const date = parseDate(command.split(' ')[1]);
+            for (taskDate of taskWithDate){
+                if (taskDate.date > date) {
+                    console.log(taskDate.task)
+                }
+            }
+            break;
         default:
             console.log('wrong command');
             break;
