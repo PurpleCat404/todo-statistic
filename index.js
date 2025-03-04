@@ -12,22 +12,34 @@ function getFiles() {
 }
 
 function getAllTasks(){
+    let tasks = [];
     for (const file of files) {
         for (const line of file.split('\n')) {
          if (line.trim().startsWith('// TODO'))
-             console.log(line.trim());
+            tasks.push(line.trim());
         }
     }
-
+    
+    return tasks;
 }
 
 function processCommand(command) {
+    let tasks;
     switch (command) {
         case 'exit':
             process.exit(0);
             break;
         case 'show':
-            getAllTasks()
+            tasks = getAllTasks()
+            for (const task of tasks)
+                console.log(task);
+            break;
+        case 'important':
+            tasks = getAllTasks()
+            for (const task of tasks){
+                if (task.includes('!'))
+                    console.log(task);
+            }
             break;
         default:
             console.log('wrong command');
