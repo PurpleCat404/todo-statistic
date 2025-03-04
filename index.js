@@ -25,19 +25,27 @@ function getAllTasks(){
 
 function processCommand(command) {
     let tasks;
-    switch (command) {
-        case 'exit':
+    switch (true) {
+        case command === 'exit':
             process.exit(0);
             break;
-        case 'show':
+        case command === 'show':
             tasks = getAllTasks()
             for (const task of tasks)
                 console.log(task);
             break;
-        case 'important':
+        case command === 'important':
             tasks = getAllTasks()
             for (const task of tasks){
                 if (task.includes('!'))
+                    console.log(task);
+            }
+            break;
+        case command.startsWith('user'):
+            tasks = getAllTasks()
+            let userName = command.split(' ')[1];
+            for (const task of tasks){
+                if (task.toLowerCase().includes(userName.toLowerCase()))
                     console.log(task);
             }
             break;
